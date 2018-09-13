@@ -1,28 +1,26 @@
-const mosca = require('mosca');
+'use strict';
+const { Fpm } = require('yf-fpm-server');
 
-const server = new mosca.Server({
-	port: 1883
+const { createMqttServer } = require('./mqtt.js');
+
+/* The Start: Create Fpm Server */
+const fpmServer = new Fpm();
+
+const biz = fpmServer.createBiz('0.0.1');
+
+biz.addSubModules('test', {
+	// foo: async (args, ctx, before) => {
+	// 	return 1
+	// }
 });
 
-server.on("clientConnected",function(client) {
-	console.log("client connected",client.id);
-});
+fpmServer.addBizModules(biz);
 
-server.on("clientDisconnected",function(client) {
-	console.log("client clientDisconnected",client.id);
-});
+fpmServer.run()
+	.then(fpm => {
 
-server.on("published",function(packet, client) {//当客户端有连接的时候，发布主题消息
-	var topic = packet.topic;
-	// should save the payload?
-	switch(topic) {
-		case 'ding':
-			//mqtt转发主题消息
-			server.publish(Object.assign(JSON.parse(packet.payload) , { qos: packet.qos, retain: packet.retain}));
-			break;
-	}
-});
+    /* The End: Create Fpm Server */
+    createMqttServer(fpm);
+    /* The End: Create Mqtt Server */
 
-server.on('ready',function() {
-	console.log("mqtt is running....");
-});
+	});
