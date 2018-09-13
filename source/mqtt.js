@@ -7,9 +7,9 @@ const createMqttServer = fpm =>{
   const clients = [];
 
   /* The Start: Create Mqtt Server */
-  const server = new mosca.Server({
-    port: 1883
-  });
+  const options = fpm.getConfig('mqtt', { port: 1883 })
+  
+  const server = new mosca.Server(options);
 
   server.on("clientConnected",function(client) {
     fpm.logger.info(client.id, ' connect');
