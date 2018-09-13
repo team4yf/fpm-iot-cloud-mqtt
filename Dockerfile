@@ -8,6 +8,8 @@ WORKDIR /app
 
 EXPOSE 1883
 
+EXPOSE 9999
+
 RUN npm i -g yarn \
     && yarn config set registry http://registry.npm.taobao.org \
     && yarn install --production \
