@@ -24,15 +24,25 @@ const createMqttServer = fpm =>{
     fpm.logger.error(client.id, ' disconnected');
   });
 
+  server.on('subscribed', function(topic, client) {
+    console.info('subscribed', topic)
+  });
+
   server.on("published",function(packet, client) {//当客户端有连接的时候，发布主题消息
     var topic = packet.topic;
       // should save the payload?
+    
+    fpm.logger.info(packet)
+    /*
     switch(topic) {
       case 'ding':
         //mqtt转发主题消息
-        server.publish(Object.assign(JSON.parse(packet.payload) , { qos: packet.qos, retain: packet.retain}));
+        const info = JSON.parse(packet.payload)
+        fpm.logger.info(info)
+        server.publish(Object.assign(info, { qos: 1, retain: true}));
         break;
     }
+    //*/
   });
 
   server.on('ready',function() {
