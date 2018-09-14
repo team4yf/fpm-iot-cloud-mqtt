@@ -8,11 +8,7 @@ const fpmServer = new Fpm();
 
 const biz = fpmServer.createBiz('0.0.1');
 
-biz.addSubModules('test', {
-	// foo: async (args, ctx, before) => {
-	// 	return 1
-	// }
-});
+biz.addSubModules('test', {});
 
 fpmServer.addBizModules(biz);
 

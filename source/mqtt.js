@@ -8,6 +8,8 @@ const createMqttServer = fpm =>{
 
   /* The Start: Create Mqtt Server */
   const options = fpm.getConfig('mqtt', { port: 1883 })
+
+  const authedUsers = fpm.getConfig('auth', [['admin', '123123123']])
   
   const server = new mosca.Server(options);
 
@@ -46,7 +48,20 @@ const createMqttServer = fpm =>{
   });
 
   server.on('ready',function() {
-    fpm.logger.info('MQTT Server is running....')
+    fpm.logger.info('MQTT Server is running....');
+    server.authenticate = (client, username, password, callback) => {
+      let flag = false;
+      for(let i = 0; i < authedUsers.length; i++){
+        if(username === authedUsers[i][0] && password.toString() === authedUsers[i][1]){
+          flag = true;
+          break;
+        }
+      }
+      if (flag) {
+        client.user = username;
+      }
+      callback(null, flag);
+    };
   });
 
   fpm.extendModule('mqtt', {

@@ -11,8 +11,16 @@ Resend the message from an iot device to the subscribes.
 `{sn:String!,payload:Buffer!}`
 sn is the device machine code, payload is the origin payload data.
 
+## Do this before run
+
+Copy the config.default.json as config.json
+
+`cp config.default.json config.json`
+
 ## It can be run within a docker
 
 ## Changelog
 
 - Add `yf-fpm-server`
+
+- Add `Authenticate` for mqtt client
