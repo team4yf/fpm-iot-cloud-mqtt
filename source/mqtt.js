@@ -26,29 +26,8 @@ const createMqttServer = fpm =>{
     fpm.logger.error(client.id, ' disconnected');
   });
 
-  server.on('subscribed', function(topic, client) {
-    console.info('subscribed', topic)
-  });
-
-  server.on("published",function(packet, client) {//当客户端有连接的时候，发布主题消息
-    var topic = packet.topic;
-      // should save the payload?
-    
-    fpm.logger.info(packet)
-    /*
-    switch(topic) {
-      case 'ding':
-        //mqtt转发主题消息
-        const info = JSON.parse(packet.payload)
-        fpm.logger.info(info)
-        server.publish(Object.assign(info, { qos: 1, retain: true}));
-        break;
-    }
-    //*/
-  });
-
   server.on('ready',function() {
-    fpm.logger.info('MQTT Server is running....');
+    fpm.logger.info(`MQTT Server is running at :${options.port}....`);
     server.authenticate = (client, username, password, callback) => {
       let flag = false;
       for(let i = 0; i < authedUsers.length; i++){
@@ -65,10 +44,6 @@ const createMqttServer = fpm =>{
   });
 
   fpm.extendModule('mqtt', {
-    publish: args => {
-      server.publish(Object.assign({ qos: 1, retain: false }, args));
-      return 1;
-    },
     clients: args => {
       return {
         total: clients.length,
