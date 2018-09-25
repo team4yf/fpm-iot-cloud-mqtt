@@ -6,7 +6,7 @@ describe('Function', function(){
 
   it('mqtt.publish', function(done){
     var func = new YF.Func('mqtt.publish');
-    func.invoke({topic: '#u1001/p1001/tcp', payload: '0304050607'})
+    func.invoke({topic: '$u1001/p1001/tcp', payload: '0304050607'})
       .then(function(d){
         console.log(d)
         done();
