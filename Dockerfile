@@ -10,7 +10,7 @@ EXPOSE 1883
 
 EXPOSE 9999
 
-RUN npm i --production --registry=https://registry.npm.taobao.org
+RUN npm i --production --registry=https://registry.npm.taobao.org \
     && npm i -g nodemon --registry=https://registry.npm.taobao.org
 
 # RUN npm i --production --registry=https://registry.npm.taobao.org
