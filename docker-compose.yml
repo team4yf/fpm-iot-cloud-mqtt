@@ -2,13 +2,15 @@ version: '3'
 services:
   web:
     build: .
+    container_name: "fpm-iot-cloud-mqtt-server"
     volumes:
       - ./source:/app/source
       - ./config.json:/app/config.json
     ports:
-      - "1883:1883"
+      - "9883:1883"
       - "9912:9999"
     networks: 
-      - staging-network
+      - mqtt-network
+    restart: always
 networks:
-  staging-network: 
+  mqtt-network: 

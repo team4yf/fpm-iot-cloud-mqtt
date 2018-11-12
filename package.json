@@ -8,13 +8,11 @@
     "test": "./node_modules/.bin/mocha test/*.test.js",
     "start": "node source/app.js",
     "dev": "./node_modules/.bin/nodemon source/app.js",
-    "docker": "docker-compose -f docker-compose.dev.yml up --build -d",
-    "docker:staging": "docker pull 192.168.100.196:5000/raiwav-server && docker-compose -f docker-compose.staging.yml up --build -d",
-    "docker:deploy": "docker-compose up --build -d",
+    "run:docker": "docker-compose up --build -d",
+    "stop:docker": "docker-compose down",
     "run:pm2": "pm2 start source/app.js --name fpm-iot-cloud-mqtt -i 1 -o logs/log.log",
-    "make:win": "./Makefile.bat",
-    "bot": "node ./fake/bot.js",
-    "nodemon": "./node_modules/.bin/nodemon source/app.js"
+    "stop:pm2": "pm2 delete fpm-iot-cloud-mqtt",
+    "bot": "node ./fake/bot.js"
   },
   "author": "FPM-TEAM",
   "dependencies": {

@@ -1,6 +1,6 @@
 {
     "server":{
-        "port": 9990
+        "port": 9999
     },
     "mqtt":{
         "port": 1883,
