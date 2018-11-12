@@ -7,7 +7,7 @@ services:
       - ./source:/app/source
       - ./config.json:/app/config.json
     ports:
-      - "9883:1883"
+      - "1883:1883"
       - "9912:9999"
     networks: 
       - mqtt-network
