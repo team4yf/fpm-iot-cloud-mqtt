@@ -10,10 +10,8 @@ EXPOSE 1883
 
 EXPOSE 9999
 
-RUN npm i -g yarn \
-    #&& yarn config set registry http://registry.npm.taobao.org \
-    && yarn install --production \
-    && npm i -g nodemon
+RUN npm i --production --registry=https://registry.npm.taobao.org \
+    && npm i -g nodemon --registry=https://registry.npm.taobao.org
 
 # RUN npm i --production --registry=https://registry.npm.taobao.org
 
