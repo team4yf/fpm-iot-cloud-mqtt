@@ -20,7 +20,29 @@ the ports definded in the config.json file
 ### docker
 `$ npm run run:docker`
 
-the default mqtt port is `9883`
+the default mqtt port is `1883`
+
+### Run with docker
+- singleton
+`$ docker `
+
+- docker-compose
+```yml
+mqttserver:
+  image: 'yfsoftcom/fpm-mqtt-server'
+  container_name: "fpm-iot-cloud-mqtt-server"
+  volumes:
+    - ./config.json:/app/config.json
+  ports:
+    - "2883:1883"
+  environment:
+    MQTT_DEBUG: 0
+    MQTT_AUTH: '{"admin":"123123123"}'
+  networks:
+    - mqtt-network
+  restart: always
+```
+
 
 ## Changelog
 

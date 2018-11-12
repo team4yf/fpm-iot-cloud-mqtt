@@ -1,16 +1,18 @@
 version: '3'
 services:
-  web:
+  mqttserver:
     build: .
     container_name: "fpm-iot-cloud-mqtt-server"
     volumes:
       - ./source:/app/source
       - ./config.json:/app/config.json
     ports:
-      - "1883:1883"
-      - "9912:9999"
-    networks: 
+      - "2883:1883"
+    environment:
+      MQTT_DEBUG: 0
+      MQTT_AUTH: '{"admin":"123123123"}'
+    networks:
       - mqtt-network
     restart: always
 networks:
-  mqtt-network: 
+  mqtt-network:
