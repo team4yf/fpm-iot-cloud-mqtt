@@ -24,7 +24,7 @@ the default mqtt port is `1883`
 
 ### Run with docker
 - singleton
-`$ docker `
+`$ docker run -d -p 1883:1883 -v /home/wangfan/projects/fpm-iot-cloud-mqtt/config.json:/app/config.json -e "MQTT_DEBUG:0" --restart=always --name fpm-mqtt-server yfsoftcom/fpm-mqtt-server:v1.0 `
 
 - docker-compose
 ```yml
@@ -34,7 +34,7 @@ mqttserver:
   volumes:
     - ./config.json:/app/config.json
   ports:
-    - "2883:1883"
+    - "1883:1883"
   environment:
     MQTT_DEBUG: 0
     MQTT_AUTH: '{"admin":"123123123"}'
