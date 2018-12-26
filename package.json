@@ -10,6 +10,7 @@
     "dev": "./node_modules/.bin/nodemon source/app.js",
     "run:docker": "docker-compose up --build -d",
     "stop:docker": "docker-compose down",
+    "make:docker": "./Makefile.sh",
     "run:pm2": "pm2 start source/app.js --name fpm-iot-cloud-mqtt -i 1 -o logs/log.log",
     "stop:pm2": "pm2 delete fpm-iot-cloud-mqtt",
     "bot": "node ./fake/bot.js"
