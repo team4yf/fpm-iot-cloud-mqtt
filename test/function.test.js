@@ -1,6 +1,8 @@
-var should = require("chai").should();
-var YF = require("yf-fpm-client-js").default;
-YF.init({ appkey:'123123', masterKey:'123', domain: 'http://localhost:9999' });
+const fpmc = require("fpmc-jssdk");
+const { Func, init } = fpmc;
+const assert = require('assert');
+
+init({ appkey:'123123', masterKey:'123123', endpoint: 'http://localhost:9999/api' });
 
 describe('Function', function(){
 
