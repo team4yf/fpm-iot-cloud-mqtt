@@ -10,5 +10,4 @@ biz.addSubModules('test', {});
 
 fpmServer.addBizModules(biz);
 
-fpmServer.run()
-	.then(fpm => { });
+fpmServer.run();

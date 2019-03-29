@@ -1,7 +1,5 @@
-FROM node:8.11.1
+FROM node:10.15.3-alpine
 
-# ADD ./package-lock.json /app/package-lock.json
-ADD ./node_modules /app/node_modules
 ADD ./package.json /app/package.json
 ADD ./source /app/source
 
@@ -11,7 +9,7 @@ EXPOSE 1883
 
 EXPOSE 9999
 
-# RUN npm i --production
+RUN npm i --production
 
 ENTRYPOINT ["node"]
 

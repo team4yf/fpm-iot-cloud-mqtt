@@ -33,10 +33,11 @@ mqttserver:
   container_name: "fpm-iot-cloud-mqtt-server"
   volumes:
     - ./config.json:/app/config.json
+    - ./logs/app.log:/app/logs/app.log
   ports:
     - "1883:1883"
   environment:
-    MQTT_DEBUG: 0
+    MQTT_DEBUG: 1
     MQTT_AUTH: '{"admin":"123123123"}'
   networks:
     - mqtt-network
