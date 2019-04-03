@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>Debug Online</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no">
+    <script src="https://unpkg.com/react@latest/umd/react.development.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@latest/babel.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js" crossorigin="anonymous"></script>
+    <style>
+      body{
+        font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #333;
+        background-color: #ecf0f5;
+      }
+      .container{
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .input-control{
+        display: block;
+        margin: 20px;
+      }
+      .input-control input, .input-control textarea{
+        margin:0;
+        font-family: inherit;
+        /* padding: 1em; */
+        /* height: 1.5em; */
+        line-height: 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border: 1px solid #eee;
+        display: block;
+        width: 100%;
+        text-indent: 10px;
+      }
+      .input-control input{
+        height: 1.8em;
+        line-height: 1.8em;
+      }
+      .input-control textarea{
+        line-height: 1.8em;
+      }
+      .form{
+        background: #fff;
+        padding: 5px 0px;
+      }
+
+      .form button{
+        border: 1px solid #eee;
+        font-family: inherit;
+        line-height: 20px;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 10px 20px;
+        margin-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      var client = mqtt.connect('mqtt://www.ruichen.top:1883', {
+          protocol: 'MQTT',
+        // auth: {
+          username: 'admin',
+          password: '123123123',
+        // }
+      })
+      console.log(client)
+      client.on('connect', function () {
+        console.log('test')
+      })
+        
+      client.on('message', function (topic, message) {
+        // message is Buffer
+        console.log(message.toString())
+      })
+    </script>
+    <script type="text/babel">
+      class App extends React.Component {
+        state = {
+        };
+        
+        render() {
+          const { open } = this.state;
+          return (
+            <div className="container">
+              <header></header>
+              <main>
+                <section>
+                  <h1>Publish</h1>
+                  <div className="pub-form form">
+                    <div className="input-control">
+                      <input placeholder="Topic" />
+                    </div>
+                    <div className="input-control">
+                      <textarea rows="3" placeholder="Payload" />
+                    </div>
+                    <div className="input-control">
+                      <button>Publish</button>
+                      <button>Reset</button>
+                    </div>
+                  </div>
+                </section>
+
+                <section>
+                  <h1>Subscribe</h1>
+                  <div className="sub-form form">
+                    <div className="input-control">
+                      <textarea rows="2" placeholder="Topics" />
+                    </div>
+                    <div className="input-control">
+                      <textarea rows="10" disable="true" placeholder="Payload" />
+                    </div>
+                    <div className="input-control">
+                      <button>Subscribe</button>
+                      <button>Clear</button>
+                    </div>
+                  </div>
+                </section>
+              </main>
+              <footer></footer>  
+            </div>
+          );
+        }
+      }
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>

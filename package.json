@@ -13,7 +13,8 @@
     "make": "./Makefile.sh",
     "run:pm2": "pm2 start source/app.js --name fpm-iot-cloud-mqtt -i 1 -o logs/log.log",
     "stop:pm2": "pm2 delete fpm-iot-cloud-mqtt",
-    "bot": "node ./fake/bot.js"
+    "bot": "node ./fake/bot.js",
+    "demo": "http-server ./views -d False -s --cors -c-1 -p 8088"
   },
   "author": "FPM-TEAM",
   "dependencies": {
