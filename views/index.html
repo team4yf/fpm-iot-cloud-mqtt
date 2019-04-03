@@ -7,7 +7,8 @@
     <script src="https://unpkg.com/react@latest/umd/react.development.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@latest/babel.min.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="https://unpkg.com/fpmc-jssdk@latest/dist/fpmc-latest.min.js"></script>
     <style>
       body{
         font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
@@ -64,28 +65,36 @@
   <body>
     <div id="root"></div>
     <script>
-      var client = mqtt.connect('mqtt://www.ruichen.top:1883', {
-          protocol: 'MQTT',
-        // auth: {
-          username: 'admin',
-          password: '123123123',
-        // }
-      })
-      console.log(client)
-      client.on('connect', function () {
-        console.log('test')
-      })
-        
-      client.on('message', function (topic, message) {
-        // message is Buffer
-        console.log(message.toString())
+      fpmc.init({ appkey: '123123', masterKey: '123123', endpoint: 'http://101.132.194.160:9007/api', v: '0.0.1' });
+      var Func = fpmc.Func;
+      var server = io( 'http://101.132.194.160:9007' );
+      server.on( 'connected', function( event ) {
+        console.log(event);
       })
     </script>
     <script type="text/babel">
       class App extends React.Component {
         state = {
         };
-        
+        handleSub = () => {
+          const { subTopic } = this.state;
+          server.on( subTopic, function( packet ) {
+            const now = new Date().toLocaleString();
+            const data = JSON.parse(packet.payload.toString());
+            const output = (`[Console] ${ now } : ${packet.topic } >>>\n ${ packet.payload.toString()}`);
+            console.log(output)
+          });
+          new Func('debug.subscribe').invoke({ topics: subTopic })
+            .then(console.log)
+            .catch(console.error)
+        }
+
+        handlePub = () => {
+          const { pubTopic, pubPayload } = this.state;
+          new Func('mqttclient.publish').invoke({ topic: pubTopic, payload: pubPayload, format: 'hex'})
+            .then(console.log)
+            .catch(console.error)
+        }
         render() {
           const { open } = this.state;
           return (
@@ -102,7 +111,7 @@
                       <textarea rows="3" placeholder="Payload" />
                     </div>
                     <div className="input-control">
-                      <button>Publish</button>
+                      <button onClick={ this.handlePub }>Publish</button>
                       <button>Reset</button>
                     </div>
                   </div>
@@ -112,13 +121,13 @@
                   <h1>Subscribe</h1>
                   <div className="sub-form form">
                     <div className="input-control">
-                      <textarea rows="2" placeholder="Topics" />
+                      <textarea rows="2" placeholder="Topics" onChange={ (e) => { this.setState({ subTopic: e.target.value }) } }/>
                     </div>
                     <div className="input-control">
-                      <textarea rows="10" disable="true" placeholder="Payload" />
+                      <textarea rows="10" disable="true" placeholder="Payload" onChange={ (e) => { this.setState({ subPayload: e.target.value }) } } />
                     </div>
                     <div className="input-control">
-                      <button>Subscribe</button>
+                      <button onClick={ this.handleSub }>Subscribe</button>
                       <button>Clear</button>
                     </div>
                   </div>
