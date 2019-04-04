@@ -1,11 +1,20 @@
 {
-    "server":{
-        "port": 9999
-    },
-    "mqtt":{
-        "port": 1883,
-        "auth": {
-            "admin": "123123123"
-        }
-    }
+	"server":{
+		"port": 9999
+	},
+	"mqtt":{
+		"port": 1883,
+		"auth": {
+			"admin": "123123123"
+		},
+		"mongo": {
+			"enable": false
+		},
+		"http": {
+			"enable": true
+		}
+	},
+	"mongodb": {
+		"autoconnect": false
+	}
 }
