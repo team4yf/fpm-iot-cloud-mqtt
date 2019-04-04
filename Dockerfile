@@ -9,6 +9,8 @@ EXPOSE 1883
 
 EXPOSE 9999
 
+EXPOSE 8001
+
 RUN npm i --production
 
 ENTRYPOINT ["node"]

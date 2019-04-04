@@ -7,8 +7,9 @@
     <script src="https://unpkg.com/react@latest/umd/react.development.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@latest/babel.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script src="https://unpkg.com/fpmc-jssdk@latest/dist/fpmc-latest.min.js"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="https://unpkg.com/lodash@4.17.11/lodash.min.js"></script>
+    
     <style>
       body{
         font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
@@ -64,51 +65,65 @@
   </head>
   <body>
     <div id="root"></div>
-    <script>
-      fpmc.init({ appkey: '123123', masterKey: '123123', endpoint: 'http://101.132.194.160:9007/api', v: '0.0.1' });
-      var Func = fpmc.Func;
-      var server = io( 'http://101.132.194.160:9007' );
-      server.on( 'connected', function( event ) {
-        console.log(event);
-      })
-    </script>
+
     <script type="text/babel">
       class App extends React.Component {
+        
         state = {
+          subTopic: '$s24/yiyuan/push'
         };
+
+        client = {}
+
+        componentDidMount(){
+          const url = prompt('URL:[localhost:8001]', 'localhost:8001');
+          this.client = mqtt.connect(`ws://${url}`)
+          this.client.on("message", (topic, payload) => {
+            const now = new Date().toLocaleString();
+            const output = (`[Console] ${ now } : ${topic } >>>\nStringFormat:${ payload.toString() }\nHexFormat:${ payload.join(' | ')}\n`);
+            const { subPayload } = this.state;
+            this.setState({
+              subPayload: output + (subPayload || '')
+            })
+          })
+        }
+        
         handleSub = () => {
           const { subTopic } = this.state;
-          server.on( subTopic, function( packet ) {
-            const now = new Date().toLocaleString();
-            const data = JSON.parse(packet.payload.toString());
-            const output = (`[Console] ${ now } : ${packet.topic } >>>\n ${ packet.payload.toString()}`);
-            console.log(output)
+          this.client.subscribe(subTopic, () => {
+            this.setState({ subed: 'Subscrib Successfully!' })
           });
-          new Func('debug.subscribe').invoke({ topics: subTopic })
-            .then(console.log)
-            .catch(console.error)
         }
 
         handlePub = () => {
           const { pubTopic, pubPayload } = this.state;
-          new Func('mqttclient.publish').invoke({ topic: pubTopic, payload: pubPayload, format: 'hex'})
-            .then(console.log)
-            .catch(console.error)
+          this.client.publish(pubTopic, pubPayload)
         }
         render() {
-          const { open } = this.state;
           return (
             <div className="container">
               <header></header>
               <main>
                 <section>
+                  <h1>Subscribe</h1>
+                  <div className="sub-form form">
+                    <div className="input-control">
+                      <input placeholder="Topic" value={ this.state.subTopic } onChange={ (e) => { this.setState({ subTopic: e.target.value }) } }/>
+                    </div>
+                    <div className="input-control">
+                      <button onClick={ this.handleSub }>Subscribe</button>
+                      <span>{ this.state.subed }</span>
+                    </div>
+                  </div>
+                </section>
+                <section>
                   <h1>Publish</h1>
                   <div className="pub-form form">
                     <div className="input-control">
-                      <input placeholder="Topic" />
+                      <input placeholder="Topic" onChange={ (e) => { this.setState({ pubTopic: e.target.value }) } }/>
                     </div>
                     <div className="input-control">
-                      <textarea rows="3" placeholder="Payload" />
+                      <textarea rows="3" placeholder="Payload" onChange={ (e) => { this.setState({ pubPayload: e.target.value }) } }/>
                     </div>
                     <div className="input-control">
                       <button onClick={ this.handlePub }>Publish</button>
@@ -118,17 +133,13 @@
                 </section>
 
                 <section>
-                  <h1>Subscribe</h1>
+                  <h1>Feedback</h1>
                   <div className="sub-form form">
                     <div className="input-control">
-                      <textarea rows="2" placeholder="Topics" onChange={ (e) => { this.setState({ subTopic: e.target.value }) } }/>
+                      <textarea rows="10" disable="disable" value={ this.state.subPayload } placeholder="Payload"/>
                     </div>
                     <div className="input-control">
-                      <textarea rows="10" disable="true" placeholder="Payload" onChange={ (e) => { this.setState({ subPayload: e.target.value }) } } />
-                    </div>
-                    <div className="input-control">
-                      <button onClick={ this.handleSub }>Subscribe</button>
-                      <button>Clear</button>
+                      <button onClick={ () => this.setState({ subPayload: ''})}>Clear</button>
                     </div>
                   </div>
                 </section>
