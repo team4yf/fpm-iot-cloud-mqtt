@@ -1,6 +1,7 @@
 /node_modules
 /.vscode
 *.logs
+*.log
 config.json
 /db.lock
 /mysqldata
